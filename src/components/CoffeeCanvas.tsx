@@ -8,11 +8,15 @@ const TOTAL_FRAMES = 120;
 export default function CoffeeCanvas() {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const hasStartedLoading = useRef(false);
     const [images, setImages] = useState<HTMLImageElement[]>([]);
     const [loadedFrames, setLoadedFrames] = useState(0);
 
     // Preload Images
     useEffect(() => {
+        if (hasStartedLoading.current) return;
+        hasStartedLoading.current = true;
+
         const urls = Array.from(
             { length: TOTAL_FRAMES },
             (_, i) => `/images/${String(i + 1).padStart(4, "0")}.jpg`
@@ -120,10 +124,10 @@ export default function CoffeeCanvas() {
     }, [images, frameIndex]);
 
     const progressPercentage = useMemo(() => {
-        return Math.floor((loadedFrames / TOTAL_FRAMES) * 100);
+        return Math.min(100, Math.floor((loadedFrames / TOTAL_FRAMES) * 100));
     }, [loadedFrames]);
 
-    const isLoaded = loadedFrames === TOTAL_FRAMES;
+    const isLoaded = loadedFrames >= TOTAL_FRAMES;
 
     return (
         <>
@@ -136,8 +140,8 @@ export default function CoffeeCanvas() {
                             style={{ width: `${progressPercentage}%` }}
                         />
                     </div>
-                    <h1 className="font-serif text-3xl md:text-5xl text-white mb-4 tracking-wide">Aroma Essence</h1>
-                    <span className="font-sans text-xs tracking-[0.2em] text-coffee-accent uppercase">
+                    <h1 className="font-serif text-3xl md:text-5xl text-white mb-6 tracking-[0.05em] drop-shadow-lg">Aroma Essence</h1>
+                    <span className="font-sans text-xs tracking-[0.3em] text-coffee-accent uppercase font-medium">
                         Preparing Experience {progressPercentage}%
                     </span>
                 </div>
@@ -165,10 +169,10 @@ export default function CoffeeCanvas() {
                             style={{ opacity: opacityA, y: yA }}
                             className="absolute mb-48 md:mb-64"
                         >
-                            <h2 className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-white drop-shadow-2xl mb-4">
+                            <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white drop-shadow-2xl mb-6">
                                 BORN IN THE SHADE.
                             </h2>
-                            <p className="font-sans text-lg md:text-xl text-white/80 max-w-xl mx-auto font-light tracking-wide">
+                            <p className="font-sans text-lg md:text-xl lg:text-2xl text-white/90 max-w-2xl mx-auto font-light tracking-wide leading-relaxed">
                                 Hand-picked Arabica beans from the highlands.
                             </p>
                         </motion.div>
@@ -178,10 +182,10 @@ export default function CoffeeCanvas() {
                             style={{ opacity: opacityB, y: yB }}
                             className="absolute mt-48 md:mt-64"
                         >
-                            <h2 className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-white drop-shadow-2xl mb-4 text-coffee-accent">
+                            <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white drop-shadow-2xl mb-6 text-coffee-accent">
                                 THE PERFECT CRACK.
                             </h2>
-                            <p className="font-sans text-lg md:text-xl text-white/80 max-w-xl mx-auto font-light tracking-wide">
+                            <p className="font-sans text-lg md:text-xl lg:text-2xl text-white/90 max-w-2xl mx-auto font-light tracking-wide leading-relaxed">
                                 Roasted at precise temperatures to unlock 800+ aromatic compounds.
                             </p>
                         </motion.div>
@@ -191,27 +195,26 @@ export default function CoffeeCanvas() {
                             style={{ opacity: opacityC, y: yC }}
                             className="absolute mb-64 md:mb-80"
                         >
-                            <h2 className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-white drop-shadow-2xl mb-4">
+                            <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white drop-shadow-2xl mb-6">
                                 LIQUID GOLD.
                             </h2>
-                            <p className="font-sans text-lg md:text-xl text-white/80 max-w-xl mx-auto font-light tracking-wide">
+                            <p className="font-sans text-lg md:text-xl lg:text-2xl text-white/90 max-w-2xl mx-auto font-light tracking-wide leading-relaxed">
                                 9 bars of pressure. 25 seconds of magic.
                             </p>
                         </motion.div>
 
-                        {/* Beat D: The Ritual */}
                         <motion.div
                             style={{ opacity: opacityD, y: yD }}
                             className="absolute flex flex-col items-center mt-32 md:mt-48 pointer-events-auto"
                         >
-                            <h2 className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-white drop-shadow-2xl mb-4">
+                            <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white drop-shadow-2xl mb-6">
                                 AWAKEN YOUR SENSES.
                             </h2>
-                            <p className="font-sans text-lg md:text-xl text-white/80 max-w-xl mx-auto font-light tracking-wide mb-10">
+                            <p className="font-sans text-lg md:text-xl lg:text-2xl text-white/90 max-w-2xl mx-auto font-light tracking-wide leading-relaxed mb-12">
                                 Experience the perfect brew at home.
                             </p>
-                            <button className="group relative px-8 py-4 bg-coffee-accent text-coffee-base font-sans font-medium hover:bg-white transition-colors duration-300 tracking-wide uppercase text-sm rounded-none overflow-hidden hover:shadow-[0_0_20px_rgba(212,163,115,0.4)]">
-                                <span className="relative z-10">Order Your Sample Pack</span>
+                            <button className="group relative px-10 py-5 bg-coffee-accent text-coffee-base font-sans font-semibold hover:bg-white transition-colors duration-300 tracking-[0.15em] uppercase text-sm rounded-none overflow-hidden hover:shadow-[0_0_25px_rgba(212,163,115,0.5)]">
+                                <span className="relative z-10 transition-colors duration-300 group-hover:text-coffee-base">ORDER YOUR SAMPLE PACK</span>
                                 <div className="absolute inset-0 bg-white transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out z-0"></div>
                             </button>
                         </motion.div>
